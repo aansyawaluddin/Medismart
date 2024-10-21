@@ -6,7 +6,7 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
     Button btn_next;
 
@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         btn_next = findViewById(R.id.button_next);
 
         btn_next.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, MainActivity2.class));
+            startActivity(new Intent(HomeActivity.this, MainActivity2.class));
         });
     }
 }

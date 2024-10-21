@@ -37,19 +37,19 @@
         app:layout_constraintHeight_percent="0.6"
         android:scaleType="fitCenter" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/tv_detection_label"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Jerawat"-->
-<!--        android:background="#A685E2"-->
-<!--        android:padding="8dp"-->
-<!--        android:textColor="#FFFFFF"-->
-<!--        android:textStyle="bold"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/previewView"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        android:layout_marginTop="8dp" />-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/tv_detection_label"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="Jerawat"-->
+    <!--        android:background="#A685E2"-->
+    <!--        android:padding="8dp"-->
+    <!--        android:textColor="#FFFFFF"-->
+    <!--        android:textStyle="bold"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/previewView"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        android:layout_marginTop="8dp" />-->
 
     <Button
         android:id="@+id/btn_medicine_recommendation"
