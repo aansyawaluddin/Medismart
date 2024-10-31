@@ -1,57 +1,66 @@
 package com.example.medismart;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.medismart.adapter.MedicineAdapter;
-import com.example.medismart.model.Medicine;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import java.util.ArrayList;
-import java.util.List;
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Random;
 
 public class MainActivity4 extends AppCompatActivity {
 
-    private RecyclerView rvMedicine;
-    private MedicineAdapter medicineAdapter;
-    private List<Medicine> medicineList;
-    private DatabaseReference databaseReference;
+    private TextView tvDetectionLabel;
+    private Button btnMedicineRecommendation, btnContactDoctor;
+    private ImageView imageView;
+
+    // Daftar penyakit yang akan dipilih secara acak
+    private String[] conditions = {"Panu", "Cacar", "Jerawat", "Kutil", "Herpes"};
+    private String randomCondition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main4);
 
-        rvMedicine = findViewById(R.id.rv_medicine);
-        rvMedicine.setLayoutManager(new LinearLayoutManager(this));
+        tvDetectionLabel = findViewById(R.id.tv_detection_label);
+        btnMedicineRecommendation = findViewById(R.id.btn_medicine_recommendation);
+        btnContactDoctor = findViewById(R.id.btn_contact_doctor);
+        imageView = findViewById(R.id.imageView);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("obat");
+        // Ambil Uri gambar yang diteruskan
+        String imageUriString = getIntent().getStringExtra("image_uri");
+        if (imageUriString != null) {
+            Uri imageUri = Uri.parse(imageUriString);
+            imageView.setImageURI(imageUri);
+        } else {
+            Toast.makeText(this, "Tidak ada gambar yang diterima", Toast.LENGTH_SHORT).show();
+        }
 
-        medicineList = new ArrayList<>();
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                medicineList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Medicine medicine = snapshot.getValue(Medicine.class);
-                    if (medicine != null) {
-                        medicineList.add(medicine);
-                    }
-                }
-                medicineAdapter = new MedicineAdapter(MainActivity4.this, medicineList);
-                rvMedicine.setAdapter(medicineAdapter);
-            }
+        randomCondition = getRandomCondition();
+        tvDetectionLabel.setText("Terdeteksi: " + randomCondition);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
+        btnMedicineRecommendation.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity4.this, MainActivity5.class);
+            intent.putExtra("detected_condition", randomCondition);
+            startActivity(intent);
         });
+
+        btnContactDoctor.setOnClickListener(v -> {
+            // Tambahkan logika untuk menghubungi dokter di sini
+            Toast.makeText(this, "Fitur menghubungi dokter belum tersedia", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private String getRandomCondition() {
+        Random random = new Random();
+        return conditions[random.nextInt(conditions.length)];
     }
 }
