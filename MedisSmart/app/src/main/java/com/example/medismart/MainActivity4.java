@@ -1,29 +1,30 @@
 package com.example.medismart;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Random;
+import com.example.medismart.server.ApiResponse;
+import com.google.gson.Gson;
+
+import java.util.List;
 
 public class MainActivity4 extends AppCompatActivity {
 
     private TextView tvDetectionLabel;
     private Button btnMedicineRecommendation, btnContactDoctor;
     private ImageView imageView;
-
-    // Daftar penyakit yang akan dipilih secara acak
-    private String[] conditions = {"Panu", "Cacar", "Jerawat", "Kutil", "Herpes"};
-    private String randomCondition;
+    private ProgressBar progressBar;
+    private String detected_obat ="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,33 +35,57 @@ public class MainActivity4 extends AppCompatActivity {
         btnMedicineRecommendation = findViewById(R.id.btn_medicine_recommendation);
         btnContactDoctor = findViewById(R.id.btn_contact_doctor);
         imageView = findViewById(R.id.imageView);
+        progressBar = findViewById(R.id.progress_bar);
 
-        // Ambil Uri gambar yang diteruskan
         String imageUriString = getIntent().getStringExtra("image_uri");
         if (imageUriString != null) {
             Uri imageUri = Uri.parse(imageUriString);
             imageView.setImageURI(imageUri);
         } else {
-            Toast.makeText(this, "Tidak ada gambar yang diterima", Toast.LENGTH_SHORT).show();
+
         }
 
-        randomCondition = getRandomCondition();
-        tvDetectionLabel.setText("Terdeteksi: " + randomCondition);
+        String apiResponse = getIntent().getStringExtra("detected_condition");
+        if (apiResponse != null) {
+            displayDetectedCondition(apiResponse);
+        } else {
+            tvDetectionLabel.setText("Tidak ada deteksi penyakit.");
+        }
 
         btnMedicineRecommendation.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity4.this, MainActivity5.class);
-            intent.putExtra("detected_condition", randomCondition);
+            intent.putExtra("detected_condition", detected_obat);
             startActivity(intent);
         });
 
+
         btnContactDoctor.setOnClickListener(v -> {
-            // Tambahkan logika untuk menghubungi dokter di sini
             Toast.makeText(this, "Fitur menghubungi dokter belum tersedia", Toast.LENGTH_SHORT).show();
         });
     }
 
-    private String getRandomCondition() {
-        Random random = new Random();
-        return conditions[random.nextInt(conditions.length)];
+    private void displayDetectedCondition(String apiResponse) {
+        showLoadingIndicator();
+
+        Gson gson = new Gson();
+        ApiResponse response = gson.fromJson(apiResponse, ApiResponse.class);
+
+        if (response.getDetected_classes() != null && !response.getDetected_classes().isEmpty()) {
+            detected_obat = response.getDetected_classes().get(0); // Ambil kondisi pertama
+            tvDetectionLabel.setText("Terdeteksi: " + detected_obat);
+            Log.d("pppp", detected_obat);
+        } else {
+            tvDetectionLabel.setText("Tidak ada deteksi penyakit.");
+        }
+
+        hideLoadingIndicator(); // Sembunyikan ProgressBar setelah pemrosesan selesai
+    }
+
+    private void showLoadingIndicator() {
+        progressBar.setVisibility(View.VISIBLE); // Tampilkan ProgressBar
+    }
+
+    private void hideLoadingIndicator() {
+        progressBar.setVisibility(View.GONE); // Sembunyikan ProgressBar
     }
 }

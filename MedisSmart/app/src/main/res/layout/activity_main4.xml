@@ -26,12 +26,11 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="370dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="390dp"
         android:layout_marginBottom="10dp"
         android:scaleType="fitCenter"
         app:layout_constraintTop_toBottomOf="@id/tv_scan_prompt"
-        app:layout_constraintBottom_toTopOf="@id/btn_medicine_recommendation"
+        app:layout_constraintBottom_toTopOf="@id/tv_detection_label"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -81,4 +80,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="30dp" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:indeterminate="true"
+        app:layout_constraintTop_toBottomOf="@id/tv_detection_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btn_medicine_recommendation"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

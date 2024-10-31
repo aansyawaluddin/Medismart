@@ -1,6 +1,7 @@
 package com.example.medismart.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,8 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
         Glide.with(context)
                 .load(medicine.getUrl())
                 .into(holder.medicineImage);
+
+        Log.d("MedicineAdapter", "Displaying: " + medicine.getNama());
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.example.medismart;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,12 +15,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity5 extends AppCompatActivity {
 
-    private RecyclerView rvMedicine;
+    private RecyclerView recyclerView;
     private MedicineAdapter medicineAdapter;
     private List<Medicine> medicineList;
     private DatabaseReference databaseReference;
@@ -29,31 +32,53 @@ public class MainActivity5 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main5);
 
-        rvMedicine = findViewById(R.id.rv_medicine);
-        rvMedicine.setLayoutManager(new LinearLayoutManager(this));
-
+        // Get the detected condition from Activity4
         detectedCondition = getIntent().getStringExtra("detected_condition");
+        Log.d("ppp",detectedCondition);
+        if (detectedCondition == null || detectedCondition.isEmpty()) {
+            Toast.makeText(this, "Tidak ada kondisi yang terdeteksi", Toast.LENGTH_SHORT).show();
+            detectedCondition = "";
+        }
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("obat");
+
+        recyclerView = findViewById(R.id.rv_medicine);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         medicineList = new ArrayList<>();
+        medicineAdapter = new MedicineAdapter(this, medicineList);
+        recyclerView.setAdapter(medicineAdapter);
+
+        // Initialize Firebase database reference
+        databaseReference = FirebaseDatabase.getInstance().getReference("obat");
+
+        fetchMedicineData();
+    }
+
+    private void fetchMedicineData() {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 medicineList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Medicine medicine = snapshot.getValue(Medicine.class);
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Medicine medicine = dataSnapshot.getValue(Medicine.class);
+
+                    // Check if the disease matches the detected condition
                     if (medicine != null && medicine.getPenyakit().equalsIgnoreCase(detectedCondition)) {
                         medicineList.add(medicine);
                     }
                 }
-                medicineAdapter = new MedicineAdapter(MainActivity5.this, medicineList);
-                rvMedicine.setAdapter(medicineAdapter);
+
+                if (medicineList.isEmpty()) {
+                    Toast.makeText(MainActivity5.this, "No medicine found for " + detectedCondition, Toast.LENGTH_SHORT).show();
+                }
+
+                medicineAdapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(MainActivity5.this, "Failed to load data", Toast.LENGTH_SHORT).show();
+                Log.e("MainActivity5", "Database error: " + error.getMessage());
             }
         });
     }
