@@ -232,18 +232,22 @@ public class MainActivity3 extends AppCompatActivity {
 
         Call<ResponseBody> call = apiService.uploadImage(body);
         call.enqueue(new Callback<ResponseBody>() {
+
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
                         String detectedCondition = response.body().string();
                         Log.d("ppp", detectedCondition);
+
+                        Toast.makeText(MainActivity3.this, "Upload berhasil!", Toast.LENGTH_SHORT).show();
+
+                        // Berpindah ke MainActivity4 setelah berhasil mengunggah
                         Intent intent = new Intent(MainActivity3.this, MainActivity4.class);
                         intent.putExtra("image_uri", Uri.fromFile(imageFile).toString());
                         intent.putExtra("detected_condition", detectedCondition);
                         startActivity(intent);
 
-                        Toast.makeText(MainActivity3.this, "Upload berhasil!", Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -251,6 +255,7 @@ public class MainActivity3 extends AppCompatActivity {
                     Toast.makeText(MainActivity3.this, "Upload gagal: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
+
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {

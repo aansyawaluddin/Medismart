@@ -16,15 +16,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.medismart.server.ApiResponse;
 import com.google.gson.Gson;
 
-import java.util.List;
-
 public class MainActivity4 extends AppCompatActivity {
 
     private TextView tvDetectionLabel;
     private Button btnMedicineRecommendation, btnContactDoctor;
     private ImageView imageView;
     private ProgressBar progressBar;
-    private String detected_obat ="";
+    private View mainContent; // Kontainer untuk elemen utama (selain ProgressBar)
+    private String detected_obat = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +35,14 @@ public class MainActivity4 extends AppCompatActivity {
         btnContactDoctor = findViewById(R.id.btn_contact_doctor);
         imageView = findViewById(R.id.imageView);
         progressBar = findViewById(R.id.progress_bar);
+        mainContent = findViewById(R.id.main_content); // Asumsi ini adalah parent layout dari semua elemen utama
+
+        showLoadingIndicator(); // Tampilkan ProgressBar saat memulai
 
         String imageUriString = getIntent().getStringExtra("image_uri");
         if (imageUriString != null) {
             Uri imageUri = Uri.parse(imageUriString);
             imageView.setImageURI(imageUri);
-        } else {
-
         }
 
         String apiResponse = getIntent().getStringExtra("detected_condition");
@@ -50,6 +50,7 @@ public class MainActivity4 extends AppCompatActivity {
             displayDetectedCondition(apiResponse);
         } else {
             tvDetectionLabel.setText("Tidak ada deteksi penyakit.");
+            hideLoadingIndicator(); // Sembunyikan ProgressBar jika tidak ada data
         }
 
         btnMedicineRecommendation.setOnClickListener(v -> {
@@ -58,15 +59,12 @@ public class MainActivity4 extends AppCompatActivity {
             startActivity(intent);
         });
 
-
         btnContactDoctor.setOnClickListener(v -> {
             Toast.makeText(this, "Fitur menghubungi dokter belum tersedia", Toast.LENGTH_SHORT).show();
         });
     }
 
     private void displayDetectedCondition(String apiResponse) {
-        showLoadingIndicator();
-
         Gson gson = new Gson();
         ApiResponse response = gson.fromJson(apiResponse, ApiResponse.class);
 
@@ -78,15 +76,17 @@ public class MainActivity4 extends AppCompatActivity {
             tvDetectionLabel.setText("Tidak ada deteksi penyakit.");
         }
 
-        hideLoadingIndicator(); // Sembunyikan ProgressBar setelah pemrosesan selesai
+        hideLoadingIndicator(); // Sembunyikan ProgressBar setelah data diproses
     }
 
     private void showLoadingIndicator() {
         progressBar.setVisibility(View.VISIBLE); // Tampilkan ProgressBar
+        mainContent.setVisibility(View.GONE); // Sembunyikan tampilan utama
     }
 
     private void hideLoadingIndicator() {
         progressBar.setVisibility(View.GONE); // Sembunyikan ProgressBar
+        mainContent.setVisibility(View.VISIBLE); // Tampilkan kembali tampilan utama
     }
 
     @Override
