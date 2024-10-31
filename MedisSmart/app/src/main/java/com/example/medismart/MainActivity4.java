@@ -88,4 +88,12 @@ public class MainActivity4 extends AppCompatActivity {
     private void hideLoadingIndicator() {
         progressBar.setVisibility(View.GONE); // Sembunyikan ProgressBar
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(MainActivity4.this, MainActivity3.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish(); // Menutup aktivitas saat ini
+    }
 }

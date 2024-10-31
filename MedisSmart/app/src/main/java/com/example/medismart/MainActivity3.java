@@ -209,12 +209,10 @@ public class MainActivity3 extends AppCompatActivity {
                     fos.write(data);
                     fos.close();
 
-                    // Kirim ke MainActivity4
                     Intent intent = new Intent(MainActivity3.this, MainActivity4.class);
                     intent.putExtra("image_uri", Uri.fromFile(file).toString());
                     startActivity(intent);
 
-                    // Upload ke server
                     uploadImageToServer(file);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -238,10 +236,8 @@ public class MainActivity3 extends AppCompatActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
-                        // Dapatkan respons hasil deteksi dari server
                         String detectedCondition = response.body().string();
                         Log.d("ppp", detectedCondition);
-                        // Kirim hasil deteksi ke MainActivity4
                         Intent intent = new Intent(MainActivity3.this, MainActivity4.class);
                         intent.putExtra("image_uri", Uri.fromFile(imageFile).toString());
                         intent.putExtra("detected_condition", detectedCondition);
