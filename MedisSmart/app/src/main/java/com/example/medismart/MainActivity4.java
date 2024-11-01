@@ -1,6 +1,9 @@
 package com.example.medismart;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.medismart.server.ApiResponse;
 import com.google.gson.Gson;
+
+import java.io.InputStream;
 
 public class MainActivity4 extends AppCompatActivity {
 
@@ -35,14 +40,14 @@ public class MainActivity4 extends AppCompatActivity {
         btnContactDoctor = findViewById(R.id.btn_contact_doctor);
         imageView = findViewById(R.id.imageView);
         progressBar = findViewById(R.id.progress_bar);
-        mainContent = findViewById(R.id.main_content); // Asumsi ini adalah parent layout dari semua elemen utama
+        mainContent = findViewById(R.id.main_content);
 
-        showLoadingIndicator(); // Tampilkan ProgressBar saat memulai
+        showLoadingIndicator();
 
         String imageUriString = getIntent().getStringExtra("image_uri");
         if (imageUriString != null) {
             Uri imageUri = Uri.parse(imageUriString);
-            imageView.setImageURI(imageUri);
+            displayRotatedImage(imageUri); // Panggil metode untuk menampilkan gambar yang diputar
         }
 
         String apiResponse = getIntent().getStringExtra("detected_condition");
@@ -50,7 +55,7 @@ public class MainActivity4 extends AppCompatActivity {
             displayDetectedCondition(apiResponse);
         } else {
             tvDetectionLabel.setText("Tidak ada deteksi penyakit.");
-            hideLoadingIndicator(); // Sembunyikan ProgressBar jika tidak ada data
+            hideLoadingIndicator();
         }
 
         btnMedicineRecommendation.setOnClickListener(v -> {
@@ -62,6 +67,26 @@ public class MainActivity4 extends AppCompatActivity {
         btnContactDoctor.setOnClickListener(v -> {
             Toast.makeText(this, "Fitur menghubungi dokter belum tersedia", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void displayRotatedImage(Uri imageUri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(imageUri);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+            // Buat objek Matrix untuk rotasi
+            Matrix matrix = new Matrix();
+            matrix.postRotate(90); // Putar 90 derajat
+
+            // Buat Bitmap baru berdasarkan Bitmap asli yang sudah diputar
+            Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+            // Tampilkan Bitmap yang sudah diputar pada ImageView
+            imageView.setImageBitmap(rotatedBitmap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Gagal memuat gambar.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void displayDetectedCondition(String apiResponse) {

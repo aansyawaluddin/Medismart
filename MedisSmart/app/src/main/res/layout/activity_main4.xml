@@ -8,8 +8,7 @@
     android:layout_height="match_parent"
     android:background="#16325B"
     tools:context=".MainActivity4">
-
-    <!-- Kontainer untuk elemen utama -->
+    
     <LinearLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"

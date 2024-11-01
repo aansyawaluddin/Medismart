@@ -209,15 +209,13 @@ public class MainActivity3 extends AppCompatActivity {
                     fos.write(data);
                     fos.close();
 
-                    Intent intent = new Intent(MainActivity3.this, MainActivity4.class);
-                    intent.putExtra("image_uri", Uri.fromFile(file).toString());
-                    startActivity(intent);
-
+                    // Panggil fungsi untuk mengunggah gambar ke server
                     uploadImageToServer(file);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
+                // Memulai ulang pratinjau kamera
                 camera.startPreview();
             }
         });
@@ -242,7 +240,7 @@ public class MainActivity3 extends AppCompatActivity {
 
                         Toast.makeText(MainActivity3.this, "Upload berhasil!", Toast.LENGTH_SHORT).show();
 
-                        // Berpindah ke MainActivity4 setelah berhasil mengunggah
+                        // Pindah ke MainActivity4 setelah pesan berhasil ditampilkan
                         Intent intent = new Intent(MainActivity3.this, MainActivity4.class);
                         intent.putExtra("image_uri", Uri.fromFile(imageFile).toString());
                         intent.putExtra("detected_condition", detectedCondition);
@@ -255,7 +253,6 @@ public class MainActivity3 extends AppCompatActivity {
                     Toast.makeText(MainActivity3.this, "Upload gagal: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
-
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
