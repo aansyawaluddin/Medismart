@@ -9,22 +9,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <Button
-        android:id="@+id/button_gallery"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Buka Galeri"
-        android:layout_above="@id/button_camera"
-        android:layout_marginBottom="8dp"
-        android:layout_centerHorizontal="true"/>
-    <Button
-        android:id="@+id/button_camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ambil Foto"
+        android:orientation="horizontal"
+        android:gravity="center"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="16dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="56dp">
+
+        <ImageButton
+            android:id="@+id/button_gallery"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/icon_galery"
+            android:contentDescription="Buka Galeri"
+            android:background="@drawable/circle_background"
+            android:layout_marginEnd="16dp"
+            android:padding="8dp" />
+
+        <ImageButton
+            android:id="@+id/button_camera"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/icon_camera"
+            android:contentDescription="Ambil Foto"
+            android:background="@drawable/circle_background"
+            android:padding="8dp" />
+    </LinearLayout>
+
 
 
 </RelativeLayout>

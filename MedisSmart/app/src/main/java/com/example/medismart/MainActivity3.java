@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -41,8 +41,8 @@ public class MainActivity3 extends AppCompatActivity {
 
     private SurfaceView surfaceView;
     private Camera camera;
-    private Button buttonCamera;
-    private Button buttonGallery;
+    private ImageButton buttonCamera;
+    private ImageButton buttonGallery;
 
     private static final int GALLERY_REQUEST_CODE = 200;
 
